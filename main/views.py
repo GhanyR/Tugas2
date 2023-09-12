@@ -26,6 +26,13 @@ def remove_item(request, pk):
         return redirect('all_items_detail')
     return render(request, 'main/remove_item.html', {'item': item})
 
+
 def all_items_detail(request):
     items = Item.objects.all()
-    return render(request, 'main/all_items_detail.html', {'items': items})
+    context = {
+        'items': items,  # Menggunakan 'items' karena di template Anda menggunakan 'items'
+        'name': 'Ghany Rasyid Prawira',
+        'class': 'PBP C',
+        'npm': '2206082392'
+    }
+    return render(request, 'main/all_items_detail.html', context)

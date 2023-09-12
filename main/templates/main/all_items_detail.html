@@ -1,31 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Plant Pedia</title>
+    <title>PlantPedia</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+        * {
+            transition: all 0.25s linear;
+        }
         body {
             background: #f8f9fa;
             font-family: 'Poppins', sans-serif;
         }
         h1 {
             text-align: center;
-            padding-top: 20px;
+            padding-top: 50px;
             color: #343a40;
             font-weight: bold;
+            font-size: 3em;
         }
-        a {
-            color: #28a745;
+        h2 {
+            text-align: center;
+            padding-top: 10px;
+            color: #343a40;
+            font-weight: 300;
+            font-size: 1.5em;
+        }
+        .info-bar {
+            text-align: center;
+            padding-top: 10px;
+            color: #343a40;
+            font-weight: 300;
+            font-size: 1em;
+        }
+        a, .btn-link {
+            color: #5eba7d;
             text-decoration: none;
         }
-        a:hover {
+        a:hover, .btn-link:hover {
             color: #218838;
             text-decoration: none;
             cursor: pointer;
         }
         .card {
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-            transition: all .4s ease-in-out;
+            margin: 20px auto;
+            border: 0;
+            border-radius: 20px;
         }
         .card:hover {
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
@@ -33,39 +54,54 @@
         }
         .containerBtn {
             text-align: center;
-            padding: 20px 0;
+            padding: 50px 0;
+        }
+        .containerBtn a {
+            background: #5eba7d;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        div.card-body {
+            padding: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Plant Pedia</h1>
+    <h1>Welcome to the PlantPedia</h1>
+    <h2>Your Guide to the Green World</h2>
+    <div class="info-bar">
+        <span>Nama: {{ name }}</span> |
+        <span>Kelas: {{ class }}</span> |
+        <span>NPM: {{ npm }}</span>
+    </div>
     <div class="container">
         <div class="row">
             {% for item in items %}
-                <div class="col-sm-4">
-                    <div class="card" style="margin:20px auto;">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Amount: {{ item.amount }}</h6>
                             <p class="card-text">Description: {{ item.description }}</p>
-                            <a href="{% url 'remove_item' item.pk %}" class="deleteBtn">Delete</a>
+                            <a href="{% url 'remove_item' item.pk %}" class="deleteBtn btn-link">Delete</a>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <p>No items available.</p>
+                <p class="text-center w-100">No items available right now.</p>
             {% endfor %}
         </div>
     </div>
     <div class="containerBtn">
-        <a href="{% url 'add_item' %}">Add item</a>
+        <a href="{% url 'add_item' %}">Add New Plant</a>
     </div>
     <script>
-        // Adding confirmation to delete functionality
-        let deleteBtns = Array.from(document.querySelectorAll('.deleteBtn'))
+        const deleteBtns = Array.from(document.querySelectorAll('.deleteBtn'))
         deleteBtns.forEach((btn) => {
             btn.addEventListener('click', (e) => {
-                if(!confirm('Are you sure you want to delete this item?')) {
+                if(!confirm('Are you sure you want to delete this plant?')) {
                     e.preventDefault()
                 }
             })
