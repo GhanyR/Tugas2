@@ -1,32 +1,92 @@
-<main/templates/main/item_detail.html>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Item Detail</title>
-    <!-- Add bootstrap CDN -->
+    <title>Plant Name</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        * {
+            transition: all 0.25s linear;
+        }
+        body {
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+        h1 {
+            text-align: center;
+            padding-top: 50px;
+            color: #343a40;
+            font-weight: bold;
+            font-size: 3em;
+        }
+        h2 {
+            text-align: center;
+            padding-top: 10px;
+            color: #343a40;
+            font-weight: 300;
+            font-size: 1.5em;
+        }
+        .info-bar {
+            text-align: center;
+            padding-top: 10px;
+            color: #343a40;
+            font-weight: 300;
+            font-size: 1em;
+        }
+        a, .btn-link {
+            color: #5eba7d;
+            text-decoration: none;
+        }
+        a:hover, .btn-link:hover {
+            color: #218838;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .card {
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            border: 0;
+            border-radius: 20px;
+        }
+        .card:hover {
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .containerBtn {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .containerBtn a {
+            background: #5eba7d;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        div.card-body {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Item Detail</h1>
+    <h1 class="text-center mt-4">Plant Detail</h1>
     <div class="container">
         <div class="row">
             {% for item in items %}
-            <div class="col-sm-4">
-                <div class="card" style="margin:20px auto;">
+            <div class="col-lg-4 col-md-6">
+                <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.name }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Amount: {{ item.amount }}</h6>
                         <p class="card-text">Description: {{ item.description }}</p>
-                        <!-- move delete link here -->
-                        <a href="{% url 'remove_item' item.pk %}">Delete</a>
+                        <a href="{% url 'remove_item' item.pk %}" class="deleteBtn btn-link">Delete Plant</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+        <div class="containerBtn">
+            <a href="{% url 'add_item' %}" class="btn btn-green">Add New Plant</a>
+        </div>
     </div>
-    <!-- add item link stay here -->
-    <a href="{% url 'add_item' %}">Add item</a>
 </body>
 </html>
