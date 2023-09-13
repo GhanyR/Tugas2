@@ -27,9 +27,11 @@ Implementasi konsep Model-View-Template (MVT) pada Django dengan tema aplikasi p
 
 ## Pertanyaan
 1. **Step-by-step Implementasi**: Lihat pada bagian di bawah ini.
-2. **Bagan Request dan Respon**: Sudah.
+2. **Bagan Request dan Respon**: Sudah, Screenshot dibawah
 3. **Virtual Environment**: Digunakan untuk isolasi dependensi, memudahkan manajemen paket.
 4. **MVC, MVT, MVVM**: MVC (Model-View-Controller), MVT (Model-View-Template), dan MVVM (Model-View-ViewModel) adalah pola desain yang berbeda dalam memanajemen aplikasi.
+
+<img width="509" alt="image" src="https://github.com/GhanyR/Tugas2/assets/63539023/562eeb60-19da-419c-afed-0b268af2369c">
 
 ### Step-by-step Implementasi
 1. Membuat proyek baru: `django-admin startproject tugas1`
