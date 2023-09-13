@@ -41,4 +41,7 @@ Implementasi konsep Model-View-Template (MVT) pada Django dengan tema aplikasi p
 7. Jalankan migrasi: `python manage.py makemigrations` dan `python manage.py migrate`
 8. Jalankan server: `python manage.py runserver`
 
+### Akun Adaptable disabled, tidak bisa login
+![image](https://github.com/GhanyR/Tugas2/assets/63539023/e780e403-fa50-4fbc-bb89-10bbff33ad32)
+
 
