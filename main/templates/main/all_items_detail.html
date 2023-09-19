@@ -4,12 +4,15 @@
     <title>PlantPedia</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" rel="stylesheet">
+    <link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             transition: all 0.25s linear;
         }
         body {
-            background: #f8f9fa;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
             font-family: 'Poppins', sans-serif;
         }
         h1 {
@@ -18,13 +21,15 @@
             color: #343a40;
             font-weight: bold;
             font-size: 3em;
+            text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
         }
         h2 {
             text-align: center;
             padding-top: 10px;
             color: #343a40;
             font-weight: 300;
-            font-size: 1.5em;
+            font-size: 2em;
+            font-family: 'Courier New', Courier, monospace;
         }
         .info-bar {
             text-align: center;
@@ -32,24 +37,23 @@
             color: #343a40;
             font-weight: 300;
             font-size: 1em;
+            margin-top: 10px;
         }
         a, .btn-link {
             color: #5eba7d;
-            text-decoration: none;
         }
         a:hover, .btn-link:hover {
             color: #218838;
-            text-decoration: none;
             cursor: pointer;
         }
         .card {
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
             border: 0;
-            border-radius: 20px;
+            border-radius: 15px;
         }
         .card:hover {
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
             transform: scale(1.05);
         }
         .containerBtn {
@@ -62,42 +66,55 @@
             border-radius: 20px;
             color: #ffffff;
             font-weight: 500;
+            font-size: 1.5em;
+            box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
         }
-        div.card-body {
+        .card-body {
             padding: 20px;
+        }
+        .card-text{
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+        }
+        .card-subtitle {
+            font-size: 1.5em;
+            font-family: 'Courier New', Courier, monospace;
         }
     </style>
 </head>
-<body>
-    <h1>Welcome to the PlantPedia</h1>
-    <h2>Your Guide to the Green World</h2>
-    <div class="info-bar">
-        <span>Nama: {{ name }}</span> |
-        <span>Kelas: {{ class }}</span> |
+<body data-aos="fade-in">
+    <h1 class="animated fadeInDown">Welcome to the PlantPedia <i class="fas fa-leaf"></i></h1>
+    <h2 class="info-bar animated fadeInDown">Your Guide to the Green World</h2> 
+    <h2 class="info-bar animated fadeInDown">Jumlah tersedia: {{ item_count }}</h2> 
+    <div class="info-bar animated fadeInUp">
+        <span>Name: {{ name }}</span> |
+        <span>Class: {{ class }}</span> |
         <span>NPM: {{ npm }}</span>
     </div>
-    <div class="container">
+    <div class="container" >
         <div class="row">
             {% for item in items %}
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body animated flipInX">
                             <h5 class="card-title">{{ item.name }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Amount: {{ item.amount }}</h6>
                             <p class="card-text">Description: {{ item.description }}</p>
-                            <a href="{% url 'remove_item' item.pk %}" class="deleteBtn btn-link">Delete</a>
+                            <a href="{% url 'remove_item' item.pk %}" class="deleteBtn btn-link">Delete <i class="fas fa-trash-alt"></i></a>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <p class="text-center w-100">No items available right now.</p>
+                <p class="text-center w-100 animated fadeIn" data-aos="zoom-in">No items available right now.</p>
             {% endfor %}
         </div>
     </div>
-    <div class="containerBtn">
-        <a href="{% url 'add_item' %}">Add New Plant</a>
+    <div class="containerBtn animated flipInY">
+        <a href="{% url 'add_item' %}">Add New Plant <i class="fas fa-plus-circle"></i></a>
     </div>
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.3.1/dist/aos.js"></script>
     <script>
+        AOS.init();
         const deleteBtns = Array.from(document.querySelectorAll('.deleteBtn'))
         deleteBtns.forEach((btn) => {
             btn.addEventListener('click', (e) => {
