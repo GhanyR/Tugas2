@@ -30,7 +30,7 @@ def remove_item(request, pk):
 def all_items_detail(request):
     items = Item.objects.all()
     context = {
-        'items': items,  # Menggunakan 'items' karena di template Anda menggunakan 'items'
+        'items': items, 
         'name': 'Ghany Rasyid Prawira',
         'class': 'PBP C',
         'npm': '2206082392'
