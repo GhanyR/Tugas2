@@ -70,7 +70,9 @@
             box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
         }
         .card-body {
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card-text{
             font-size: 1em;
@@ -79,6 +81,19 @@
         .card-subtitle {
             font-size: 1.5em;
             font-family: 'Courier New', Courier, monospace;
+        }
+        .info-bar span:last-child {
+            padding-left: 1em;
+            border-left: 2px solid #343a40;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn-link {
+            flex-grow: 1;
+            margin: 0 10px;
+            text-align: center;
         }
     </style>
 </head>
@@ -89,7 +104,9 @@
     <div class="info-bar animated fadeInUp">
         <span>Name: {{ name }}</span> |
         <span>Class: {{ class }}</span> |
-        <span>NPM: {{ npm }}</span>
+        <span>NPM: {{ npm }}</span> |
+        <span>Last login: {{ request.user.last_login }}</span> |
+        <span><a class="btn-link" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a></span>
     </div>
     <div class="container" >
         <div class="row">
@@ -100,7 +117,11 @@
                             <h5 class="card-title">{{ item.name }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Amount: {{ item.amount }}</h6>
                             <p class="card-text">Description: {{ item.description }}</p>
-                            <a href="{% url 'remove_item' item.pk %}" class="deleteBtn btn-link">Delete <i class="fas fa-trash-alt"></i></a>
+                            <div class="btn-group">
+                                <a href="{% url 'remove_item' item.pk %}" class="btn-link">Delete <i class="fas fa-trash-alt"></i></a>
+                                <a href="{% url 'add_quantity' item.pk %}" class="btn-link">Add <i class="fas fa-plus-circle"></i></a>
+                                <a href="{% url 'remove_quantity' item.pk %}" class="btn-link">Decrease <i class="fas fa-minus-circle"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import add_item, remove_item
+from .views import add_item, remove_item, login_user, register, logout_user
 
 urlpatterns = [
     path('add_item/', add_item, name='add_item'),
@@ -12,5 +12,10 @@ urlpatterns = [
     path('view_json/', views.view_json, name='view_json'),
     path('view_xml_id/<int:pk>/', views.view_xml_id, name='view_xml_id'),
     path('view_json_id/<int:pk>/', views.view_json_id, name='view_json_id'),
+    path('register/', register, name='register'),
+    path('login/', login_user, name='login'),
+    path('logout/', logout_user, name='logout'),
+    path('add_quantity/<int:pk>/', views.add_quantity, name='add_quantity'),
+    path('remove_quantity/<int:pk>/', views.remove_quantity, name='remove_quantity'),
 ]
     

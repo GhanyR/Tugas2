@@ -4,6 +4,13 @@ from .forms import ItemForm
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.template import loader
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 def item_detail(request, pk):
     item = Item.objects.get(pk=pk)
@@ -13,11 +20,12 @@ def index(request):
     return render(request, 'main/index.html')
 
 def add_item(request):
-    if request.method == "POST":
-        form = ItemForm(request.POST)
-        if form.is_valid():
-            item = form.save()
-            return redirect('all_items_detail')
+    form = ItemForm(request.POST or None)
+    if form.is_valid() and request.method == "POST":
+        item = form.save(commit=False)
+        item.user = request.user
+        item.save()
+        return redirect('all_items_detail')
     else:
         form = ItemForm()
     return render(request, 'main/add_item.html', {'form': form})
@@ -29,12 +37,12 @@ def remove_item(request, pk):
         return redirect('all_items_detail')
     return render(request, 'main/remove_item.html', {'item': item})
 
-
+@login_required(login_url='/login')
 def all_items_detail(request):
-    items = Item.objects.all()
+    items = Item.objects.filter(user=request.user)
     context = {
         'items': items, 
-        'name': 'Ghany Rasyid Prawira',
+        'name': request.user.username,
         'class': 'PBP C',
         'npm': '2206082392',
         'item_count': items.count(),
@@ -63,3 +71,49 @@ def view_json_id(request, pk):
     item = serializers.serialize('json', [Item.objects.get(pk=pk)])
     return JsonResponse(item, safe=False)
 
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('login')
+    
+    context = {'form':form}
+    return render(request, 'main/register.html', context)
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            user.last_login = timezone.now()
+            user.save(update_fields=['last_login'])
+            return redirect('all_items_detail')
+        else:
+            messages.info(request, 'Username OR password is incorrect')
+
+    context = {}
+    return render(request, 'main/login.html', context)
+  
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+def add_quantity(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    item.amount += 1
+    item.save()
+    return redirect('all_items_detail')
+
+def remove_quantity(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    item.amount -= 1
+    item.save()
+    return redirect('all_items_detail')
