@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PlantPedia</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" rel="stylesheet">
+    <link href="https://cdn.rawgit.com/michalsnik/aos/2.1.1/dist/aos.css" rel="stylesheet">
+    <style>
+        * {
+            transition: all 0.25s linear;
+        }
+        body {
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            font-family: 'Poppins', sans-serif;
+        }
+        h1 {
+            text-align: center;
+            padding-top: 50px;
+            color: #343a40;
+            font-weight: bold;
+            font-size: 3em;
+            text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+        }
+        h2 {
+            text-align: center;
+            padding-top: 10px;
+            color: #343a40;
+            font-weight: 300;
+            font-size: 2em;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .info-bar {
+            text-align: center;
+            padding-top: 10px;
+            color: #343a40;
+            font-weight: 300;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        a, .btn-link {
+            color: #5eba7d;
+        }
+        a:hover, .btn-link:hover {
+            color: #218838;
+            cursor: pointer;
+        }
+        .card {
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            border: 0;
+            border-radius: 15px;
+        }
+        .card:hover {
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .containerBtn {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .containerBtn a {
+            background: #5eba7d;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 1.5em;
+            box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-text{
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+        }
+        .card-subtitle {
+            font-size: 1.5em;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .info-bar span:last-child {
+            padding-left: 1em;
+            border-left: 2px solid #343a40;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn-link {
+            flex-grow: 1;
+            margin: 0 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body data-aos="fade-in">
+    <h1 class="animated fadeInDown">Welcome to the PlantPedia <i class="fas fa-leaf"></i></h1>
+    <h2 class="info-bar animated fadeInDown">Your Guide to the Green World</h2> 
+    <h2 class="info-bar animated fadeInDown">Jumlah tersedia: {{ item_count }}</h2> 
+    <div class="info-bar animated fadeInUp">
+        <span>Name: {{ name }}</span> |
+        <span>Class: {{ class }}</span> |
+        <span>NPM: {{ npm }}</span> |
+        <span>Last login: {{ request.user.last_login }}</span> |
+        <span><a class="btn-link" href="{% url 'logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a></span>
+    </div>
+    <div class="container" >
+        <div class="row">
+            {% for item in items %}
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in">
+                    <div class="card">
+                        <div class="card-body animated flipInX">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Amount: {{ item.amount }}</h6>
+                            <p class="card-text">Description: {{ item.description }}</p>
+                            <div class="btn-group">
+                                <a href="{% url 'remove_item' item.pk %}" class="btn-link">Delete <i class="fas fa-trash-alt"></i></a>
+                                <a href="#" data-id="{{ item.pk }}" class="btn-link delete-ajax">Delete Ajax<i class="fas fa-trash-alt"></i></a>
+                                <a href="{% url 'add_quantity' item.pk %}" class="btn-link">Add <i class="fas fa-plus-circle"></i></a>
+                                <a href="{% url 'remove_quantity' item.pk %}" class="btn-link">Decrease <i class="fas fa-minus-circle"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center w-100 animated fadeIn" data-aos="zoom-in">No items available right now.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="containerBtn animated flipInY">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addItemModal">
+            Add New Plant <i class="fas fa-plus-circle"></i>
+        </button>        
+    </div>
+    <div id="addItemModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Plant</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addItemForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" name="amount" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.rawgit.com/michalsnik/aos/2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        const deleteBtns = Array.from(document.querySelectorAll('.deleteBtn'))
+        deleteBtns.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                if(!confirm('Are you sure you want to delete this plant?')) {
+                    e.preventDefault()
+                }
+            })
+        })
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.delete-ajax').on('click', function(e) {
+                e.preventDefault();
+                let itemId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this plant?')) {
+                    fetch(`/delete-item-ajax/${itemId}/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error deleting the item. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        });
+
+        $("#addItemForm").submit(function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: '/create-ajax/',
+            data: $(this).serialize(),
+            success: function(response) {
+                if(response.success) {
+                    $("#addItemModal").modal('hide');
+                    location.reload();  // Refresh cards setelah menambahkan item
+                } else {
+                    alert('Failed to add item. Please try again.');
+                }
+            }
+        });
+    });
+    </script>
+    
+</body>
+</html>
