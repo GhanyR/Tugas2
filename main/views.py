@@ -10,7 +10,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.views.decorators.csrf import csrf_exempt
+import json
+from main.models import Item
 
 def item_detail(request, pk):
     item = Item.objects.get(pk=pk)
@@ -140,3 +142,25 @@ def delete_item_ajax(request, pk):
         item.delete()
         return JsonResponse({"success": True})
     return JsonResponse({"success": False})
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_product = Item.objects.create(
+            user = request.user,
+            name = data["name"],
+            category = data["category"],
+            amount = int(data["amount"]),
+            power = int(data["power"]),
+            price = int(data["price"]),
+            description = data["description"]
+        )
+
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
